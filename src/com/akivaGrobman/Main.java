@@ -17,9 +17,23 @@ public class Main {
         clearBoard();
         do {
             printBoard();
-            System.out.println("Please enter the position for your piece 1-9");
+            System.out.println("It's now the " + getCurrentPiece() + " turn\nPlease enter the position for your piece 1-9");
             int position = getPosition();
+            if(board[position] == ' ') {
+                board[position] = getCurrentPiece();
+                turnCount++;
+                isXTurn = !isXTurn;
+            } else {
+                System.out.println("Sorry that position is already taken please try an different position");
+            }
         } while (turnCount != 9 && gameNotWon());
+        if(turnCount == 9 && gameNotWon()) {
+            System.out.println("Oops now winner :(\nbetter luck next time");
+        } else {
+            printBoard();
+            isXTurn = !isXTurn;
+            System.out.println("Yay the " + getCurrentPiece() + " player won.");
+        }
     }
 
     public static int getPosition() {
@@ -33,9 +47,35 @@ public class Main {
         return character - '1';
     }
 
-    //todo
+    public static char getCurrentPiece() {
+        char piece;
+        if(isXTurn) {
+            piece = 'X';
+        } else {
+            piece = 'O';
+        }
+        return piece;
+    }
+
     public static boolean gameNotWon() {
-        return false;
+        //todo fix this
+        for (int i = 0; i < board.length; i += 3) {
+            if(board[i] != ' ' && board[i] == board[i + 1] && board[i] == board[i + 2]) {
+                return false;
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            if(board[i] != ' ' && board[i] == board[i + 3] && board[i] == board[i + 6]) {
+                return false;
+            }
+        }
+        if(board[0] != ' ' && board[0] == board[4] && board[0] == board[8]) {
+            return false;
+        }
+        if(board[2] != ' ' && board[2] == board[4] && board[2] == board[6]) {
+            return false;
+        }
+        return true;
     }
 
     public static void clearBoard() {
