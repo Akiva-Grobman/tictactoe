@@ -1,13 +1,14 @@
 package com.akivaGrobman;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 
-    public static Scanner scanner;
-    public static char[] board;
-    public static boolean isXTurn;
+    private static Scanner scanner;
+    private static char[] board;
+    private static boolean isXTurn;
 
     public static void main(String[] args) {
         int turnCount = 0;
@@ -36,18 +37,31 @@ public class Main {
         }
     }
 
-    public static int getPosition() {
-        String input = scanner.nextLine();
-        char character = input.charAt(0);
-        // todo allow him to correct
-        if(character < '1' || character > '9') {
-            System.out.println("error invalid input");
-            System.exit(0);
+    private static void printBoard() {
+        StringBuilder output = new StringBuilder(" -------------\n");
+        for (int i = 0; i < board.length; i++) {
+            output.append(" | ").append(board[i]);
+            if((i + 1) % 3 == 0) {
+                output.append(" |\n -------------\n");
+            }
         }
+        System.out.println(output);
+    }
+
+    private static int getPosition() {
+        char character;
+        do {
+            String input = scanner.nextLine();
+            character = input.charAt(0);
+            if (character >= '1' && character <= '9') {
+                break;
+            }
+            System.out.println("invalid input please try again 1-9");
+        } while (true);
         return character - '1';
     }
 
-    public static char getCurrentPiece() {
+    private static char getCurrentPiece() {
         char piece;
         if(isXTurn) {
             piece = 'X';
@@ -57,8 +71,7 @@ public class Main {
         return piece;
     }
 
-    public static boolean gameNotWon() {
-        //todo fix this
+    private static boolean gameNotWon() {
         for (int i = 0; i < board.length; i += 3) {
             if(board[i] != ' ' && board[i] == board[i + 1] && board[i] == board[i + 2]) {
                 return false;
@@ -72,32 +85,10 @@ public class Main {
         if(board[0] != ' ' && board[0] == board[4] && board[0] == board[8]) {
             return false;
         }
-        if(board[2] != ' ' && board[2] == board[4] && board[2] == board[6]) {
-            return false;
-        }
-        return true;
+        return !(board[2] != ' ' && board[2] == board[4] && board[2] == board[6]);
     }
 
-    public static void clearBoard() {
-        // todo fix this
-        for (int i = 0; i < board.length; i++) {
-            board[i] = ' ';
-        }
-    }
-
-    public static void printBoard() {
-        //todo fix this
-        String output = " -------------\n";
-        for (int i = 0; i < board.length; i++) {
-            output += " | " + board[i];
-            if((i + 1) % 3 == 0) {
-                output += " |\n -------------\n";
-            }
-        }
-        System.out.println(output);
-    }
-
-    public static void initializeGame() {
+    private static void initializeGame() {
         scanner = new Scanner(System.in);
         board = new char[9];
         Random random = new Random();
@@ -105,6 +96,10 @@ public class Main {
         for (int i = 0; i < board.length; i++) {
             board[i] = (char)(i + '1');
         }
+    }
+
+    private static void clearBoard() {
+        Arrays.fill(board, ' ');
     }
 
 }
